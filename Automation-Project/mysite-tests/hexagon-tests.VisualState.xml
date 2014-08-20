@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<VisualState xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ShowCheckBoxes="true">
+  <TopNode>[0-1000]C:\Users\Itaya\git\toyga-web-automation\Hexagon-Automation\hexagon-tests\hexagon-tests.nunit</TopNode>
+  <SelectedNode>[0-1024]depositcenter_tests.Tests.GoogleSampleTest.TestAssertionError</SelectedNode>
+  <SelectedCategories>regression</SelectedCategories>
+  <ExcludeCategories>false</ExcludeCategories>
+  <Nodes>
+    <Node UniqueName="[0-1000]C:\Users\Itaya\git\toyga-web-automation\Hexagon-Automation\hexagon-tests\hexagon-tests.nunit" Expanded="true" />
+    <Node UniqueName="[0-1199]C:\Users\Itaya\git\toyga-web-automation\Hexagon-Automation\hexagon-tests\bin\Debug\hexagon-tests.dll" Expanded="true" />
+    <Node UniqueName="[0-1203]depositcenter_tests" Expanded="true" />
+    <Node UniqueName="[0-1204]depositcenter_tests.Tests" Expanded="true" />
+    <Node UniqueName="[0-1020]depositcenter_tests.Tests.GoogleSampleTest" Expanded="true" Checked="true" />
+    <Node UniqueName="[0-1021]depositcenter_tests.Tests.GoogleSampleTest.TestSearchCheese" Checked="true" />
+    <Node UniqueName="[0-1209]newbo_tests" Expanded="true" />
+    <Node UniqueName="[0-1210]newbo_tests.Tests" Expanded="true" />
+    <Node UniqueName="[0-1200]ToygaAutomation" Expanded="true" />
+    <Node UniqueName="[0-1201]ToygaAutomation.DepositCenterSanity" Expanded="true" />
+    <Node UniqueName="[0-1202]ToygaAutomation.DepositCenterSanity.tests" Expanded="true" />
+    <Node UniqueName="[0-1207]ToygaAutomation.newbo_tests" Expanded="true" />
+    <Node UniqueName="[0-1208]ToygaAutomation.newbo_tests.Tests" Expanded="true" />
+    <Node UniqueName="[0-1205]ToygaAutomation.NewBoSanity" Expanded="true" />
+    <Node UniqueName="[0-1206]ToygaAutomation.NewBoSanity.tests" Expanded="true" />
+    <Node UniqueName="[0-1211]ToygaAutomation.ufxmarkets_tests" Expanded="true" />
+    <Node UniqueName="[0-1212]ToygaAutomation.ufxmarkets_tests.Tests" Expanded="true" />
+  </Nodes>
+</VisualState>

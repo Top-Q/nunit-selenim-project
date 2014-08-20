@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!--This file represents the results of running a test suite-->
+<test-results name="C:\Users\Itaya\git\toyga-web-automation\Hexagon-Automation\hexagon-tests\hexagon-tests.nunit" total="1" errors="1" failures="0" not-run="0" inconclusive="0" ignored="0" skipped="0" invalid="0" date="2014-04-16" time="15:23:07">
+  <environment nunit-version="2.6.3.13283" clr-version="2.0.50727.5477" os-version="Microsoft Windows NT 6.1.7601 Service Pack 1" platform="Win32NT" cwd="C:\Program Files (x86)\NUnit 2.6.3\bin" machine-name="COMP-176" user="itaya" user-domain="TOYGA" />
+  <culture-info current-culture="en-US" current-uiculture="en-US" />
+  <test-suite type="Project" name="C:\Users\Itaya\git\toyga-web-automation\Hexagon-Automation\hexagon-tests\hexagon-tests.nunit" executed="True" result="Failure" success="False" time="5.062" asserts="0">
+    <results>
+      <test-suite type="Assembly" name="C:\Users\Itaya\git\toyga-web-automation\Hexagon-Automation\hexagon-tests\bin\Debug\hexagon-tests.dll" executed="True" result="Failure" success="False" time="5.061" asserts="0">
+        <results>
+          <test-suite type="Namespace" name="depositcenter_tests" executed="True" result="Failure" success="False" time="5.061" asserts="0">
+            <results>
+              <test-suite type="Namespace" name="Tests" executed="True" result="Failure" success="False" time="5.061" asserts="0">
+                <results>
+                  <test-suite type="TestFixture" name="GoogleSampleTest" executed="True" result="Failure" success="False" time="5.060" asserts="0">
+                    <results>
+                      <test-case name="depositcenter_tests.Tests.GoogleSampleTest.TestSearchCheese" executed="True" result="Error" success="False" time="5.059" asserts="0">
+                        <categories>
+                          <category name="regression" />
+                        </categories>
+                        <failure>
+                          <message><![CDATA[System.NullReferenceException : Object reference not set to an instance of an object.]]></message>
+                          <stack-trace><![CDATA[at integ_framework_infra.Infra.Report.Reporters.HtmlTestReproters.HtmlTestReporter.Report(String title, String message, TestStatus status, ReportElementType type) in c:\Users\Itaya\git\toyga-web-automation\Hexagon-Automation\integ-framework-infra\Infra\Report\Reporters\HtmlTestReporter\HtmlTestReporter.cs:line 121
+at integ_framework_infra.Infra.Report.ReportManager.Report(String title, String message, TestStatus status, ReportElementType type) in c:\Users\Itaya\git\toyga-web-automation\Hexagon-Automation\integ-framework-infra\Infra\Report\ReportManager.cs:line 135
+at integ_framework_infra.Infra.Report.ReportManager.Step(String title) in c:\Users\Itaya\git\toyga-web-automation\Hexagon-Automation\integ-framework-infra\Infra\Report\ReportManager.cs:line 149
+at depositcenter_tests.Tests.GoogleSampleTest.TestSearchCheese() in c:\Users\Itaya\git\toyga-web-automation\Hexagon-Automation\hexagon-tests\tests\GoogleSampleTest.cs:line 33
+]]></stack-trace>
+                        </failure>
+                      </test-case>
+                    </results>
+                  </test-suite>
+                </results>
+              </test-suite>
+            </results>
+          </test-suite>
+        </results>
+      </test-suite>
+    </results>
+  </test-suite>
+</test-results>
