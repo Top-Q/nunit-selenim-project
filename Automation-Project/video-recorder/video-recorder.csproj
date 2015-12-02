@@ -66,6 +66,7 @@
     <Compile Include="Tests\ProcessHandlerTests.cs" />
     <Compile Include="Main\VideoRecorder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Tests\VideoRecorderTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

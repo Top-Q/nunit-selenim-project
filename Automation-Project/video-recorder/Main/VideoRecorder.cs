@@ -1,35 +1,74 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using video_recorder;
 
 namespace Topq.Auto.VideoRecorder
 {
     public class VideoRecorder
     {
-        private readonly string ffmpegPath;
+
+        private FfmpegWrapper ffmpeg;
         
         private int secondsToSave = 10;
 
-        private bool reserveCpuMode = true;
+        private float framePerSecond = 7.5f;
+
+        private bool reserveCpuMode = false;
+
+        private string videoCaptureFileName;
+
+        private string fileUid;
 
 
-        public VideoRecorder(string ffmpegPath)
+        public VideoRecorder(string ffmpegBinPath = @"c:/Program Files (x86)/ffmpeg/bin/")
         {
-            this.ffmpegPath = ffmpegPath;
+            ffmpeg = new FfmpegWrapper(ffmpegBinPath);            
+            fileUid = DateTime.Now.Ticks.ToString();
+            SetVideoCaptureFileName();
         }
 
-        public void startRecording()
+        private void SetVideoCaptureFileName()
         {
+            string fileNamePrefix = Path.GetTempPath() + "tempVideoCaptureFile" + fileUid +".";
+            if (reserveCpuMode)
+            {
+                videoCaptureFileName = fileNamePrefix + "mkv";
+            } 
+            else 
+            {
+                videoCaptureFileName = fileNamePrefix + "mp4";
+            }
+
+
         }
 
-        public void dumpRecording()
+        public void StartRecording()
         {
+            ffmpeg.CaptureRawVideo(videoCaptureFileName, FramePerSecond);
         }
 
-        public void saveReocrding()
+        private void StopRecording()
         {
+            ffmpeg.EndVideoCapture();
+        }
+
+        public void DumpRecording()
+        {
+            StopRecording();
+            File.Delete(videoCaptureFileName);
+        }
+
+        public string SaveRecording()
+        {
+            StopRecording();
+            string tempVideoFileName = Path.GetTempPath() + "trimmedVideoCapture" + fileUid + (ReserveCpuMode ? ".mp4" : ".mkv");            
+            ffmpeg.TrimMovie(videoCaptureFileName, tempVideoFileName, SecondsToSave);
+            File.Delete(videoCaptureFileName);
+            return tempVideoFileName;
         }
 
         public int SecondsToSave
@@ -38,16 +77,18 @@ namespace Topq.Auto.VideoRecorder
             set { secondsToSave = value; }
         }
 
-        public string FfmpegPath
-        {
-            get { return ffmpegPath; }
-        }
-
         public bool ReserveCpuMode
         {
             get { return reserveCpuMode; }
-            set { reserveCpuMode = value; }
+            set { reserveCpuMode = value; SetVideoCaptureFileName(); }
         }
+
+        public float FramePerSecond
+        {
+            get { return framePerSecond; }
+            set { framePerSecond = value; }
+        }
+
 
 
     }

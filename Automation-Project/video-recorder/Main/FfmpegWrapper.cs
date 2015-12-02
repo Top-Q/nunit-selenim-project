@@ -20,6 +20,26 @@ namespace video_recorder
 
         private const string VIDEO_DETAILS_REGEX = @"Duration:\s(\d{2}:\d{2}:\d{2}\.\d{2})";
 
+        /// <summary>
+        /// UNUSED        
+        /// 0 - Start duration to begin trimmed media (e.g 00:09:50.00)
+        /// 1 - Source file
+        /// 2 - Length of the new movie
+        /// 3 - Destination file
+        /// 
+        /// </summary>
+        private const string TRIM_COMPRESSED_MOVIE = " -loglevel panic -ss {0} -i {1} -t {2} {3}";
+        // private const string TRIM_COMPRESSED_MOVIE = " -loglevel panic -ss {0} -i {1} -t {2} -c:v copy -c:a copy {3}";
+
+        
+        /// <summary>
+        /// 0 - Source file
+        /// 1 - Start time in seconds (e.g 30)
+        /// 2 - End time in seconds (e.g 50)
+        /// 3 - Destination file name
+        /// </summary>
+        private const string TRIM_MOVIE = " -loglevel panic -i {0} -vf trim={1}:{2} {3}";
+
         private readonly string ffmpegPath;
 
         private ProcessHandler ffmpegProcess;
@@ -27,6 +47,10 @@ namespace video_recorder
         internal FfmpegWrapper(string ffmpegBinPath = @"c:/Program Files (x86)/ffmpeg/bin/")
         {
             this.ffmpegPath = ffmpegBinPath;
+            if (!File.Exists(ffmpegPath + @"ffmpeg.exe"))
+            {
+                throw new FileNotFoundException(ffmpegPath + "ffmpeg.exe was not found. Please install it or specify the correct folder");
+            }
         }
 
         /// <summary>
@@ -119,7 +143,7 @@ namespace video_recorder
             ProcessHandler.ProcessOutput processOutput = compressProcess.StartInBlockingMode();
             if (processOutput.ErrorCode != 0)
             {
-                throw new InvalidProgramException("Failure while trying to compress video: " + processOutput.Stderror);
+                throw new InvalidProgramException("Failure while trying to fetch video details: " + processOutput.Stderror);
             }
             Regex rgx = new Regex(VIDEO_DETAILS_REGEX);
             MatchCollection matches = rgx.Matches(processOutput.Stderror);
@@ -127,27 +151,42 @@ namespace video_recorder
             {
                 throw new InvalidProgramException("Failed to fetch duration");
             }
-            return new VideoDetails(matches[0].Groups[1].Value);
+            return new VideoDetails(TimeSpan.Parse(matches[0].Groups[1].Value));            
         }
 
-        internal void CutMovie(string sourceFileName, string destinationFileName, string startTime, string endTime)
+
+        internal void TrimMovie(string sourceFileName, string destinationFileName, int timeToKeepInSeconds)
         {
+            TimeSpan movieLength = FetchVideoDetails(sourceFileName).Duration;
+            File.Delete(destinationFileName);
+            ProcessHandler trimProcess = new ProcessHandler(ffmpegPath + @"ffmpeg.exe", String.Format(TRIM_COMPRESSED_MOVIE, movieLength - TimeSpan.FromSeconds(timeToKeepInSeconds), sourceFileName, TimeSpan.FromSeconds(timeToKeepInSeconds), destinationFileName));
+            ProcessHandler.ProcessOutput processOutput = trimProcess.StartInBlockingMode();
+            if (processOutput.ErrorCode != 0)
+            {
+                throw new InvalidProgramException("Failed to trim movie");
+            }
 
         }
+
 
         internal class VideoDetails
         {
-            private readonly string duration;
+            private readonly TimeSpan duration;
 
-            internal VideoDetails(string duration)
+            internal VideoDetails(TimeSpan duration)
             {
                 this.duration = duration;
             }
 
-            internal string Duration
+            internal TimeSpan Duration
             {
                 get { return duration; }
                 
+            }
+
+            public override string ToString()
+            {
+                return "Duration: " + duration;
             }
 
 

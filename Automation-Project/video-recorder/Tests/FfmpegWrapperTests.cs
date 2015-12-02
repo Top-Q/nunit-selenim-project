@@ -56,9 +56,59 @@ namespace video_recorder
             Thread.Sleep(1000 * 2);
             ffmpeg.EndVideoCapture();
             FfmpegWrapper.VideoDetails details = ffmpeg.FetchVideoDetails(source);
+            Assert.AreEqual(0, details.Duration.Days);
+            Assert.AreEqual(0, details.Duration.Hours);
+            Assert.AreEqual(0, details.Duration.Minutes);
+            Assert.AreEqual(2, details.Duration.Seconds);            
         }
 
+        [Test]
+        public void TestTrimRawVideo()
+        {
+            
+            string source = @"c:\temp\captureRaw.mkv";
+            string destination = @"c:\temp\captureRawCut.mkv";
 
+            ffmpeg.CaptureRawVideo(source, 7.5f);
+            Thread.Sleep(1000 * 20);
+            ffmpeg.EndVideoCapture();
+
+            
+            int secondsToKeep = 10;
+            ffmpeg.TrimMovie(source, destination, secondsToKeep);
+            FfmpegWrapper.VideoDetails details = ffmpeg.FetchVideoDetails(destination);
+            
+             Assert.AreEqual(0, details.Duration.Days);
+             Assert.AreEqual(0, details.Duration.Hours);
+             Assert.AreEqual(secondsToKeep, details.Duration.Seconds);            
+             Assert.AreEqual(0, details.Duration.Minutes);            
+
+
+        }
+
+        [Test]
+        public void TestTrimCompressedVideo()
+        {
+
+            string source = @"c:\temp\captureRaw.mp4";
+            string destination = @"c:\temp\captureRawCut.mp4";
+
+            ffmpeg.CaptureCompressedVideo(source, 7.5f);
+            Thread.Sleep(1000 * 20);
+            ffmpeg.EndVideoCapture();
+
+
+            int secondsToKeep = 10;
+            ffmpeg.TrimMovie(source, destination, secondsToKeep);
+            FfmpegWrapper.VideoDetails details = ffmpeg.FetchVideoDetails(destination);
+
+            Assert.AreEqual(0, details.Duration.Days);
+            Assert.AreEqual(0, details.Duration.Hours);
+            Assert.AreEqual(secondsToKeep, details.Duration.Seconds);
+            Assert.AreEqual(0, details.Duration.Minutes);            
+
+
+        }
 
     }
 }
