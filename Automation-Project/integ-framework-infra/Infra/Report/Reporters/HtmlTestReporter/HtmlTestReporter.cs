@@ -72,7 +72,7 @@ namespace integ_framework_infra.Infra.Report.Reporters.HtmlTestReproters
         }
 
 
-        public void Init(string outputFolder)
+        public virtual void Init(string outputFolder)
         {
             this.outputFolder = outputFolder + @"\current";
             CreateReportsFolder();
@@ -84,7 +84,7 @@ namespace integ_framework_infra.Infra.Report.Reporters.HtmlTestReproters
 
         }
 
-        public void StartTest(ReporterTestInfo testInfo)
+        public virtual void StartTest(ReporterTestInfo testInfo)
         {
 
             currentTest = new Test(testInfo.TestName);
@@ -108,7 +108,7 @@ namespace integ_framework_infra.Infra.Report.Reporters.HtmlTestReproters
             testDetails.timestamp = DateTime.Now.ToString();
         }
 
-        public void EndTest(ReporterTestInfo testInfo)
+        public virtual void EndTest(ReporterTestInfo testInfo)
         {
 
             currentTest.status = testInfo.Status.ToString();

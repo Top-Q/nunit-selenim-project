@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using integ_framework_infra.Infra.Report;
+using System.IO;
 
 namespace Webdriver_infra.Infra
 {
@@ -26,7 +27,7 @@ namespace Webdriver_infra.Infra
             string screenshotFileName = System.IO.Path.GetTempPath() + Guid.NewGuid().ToString() + ".png";
             ss.SaveAsFile(screenshotFileName, ImageFormat.Png); //use any of the built in image formating
             ReportManager.Instance.ReportImage(description, screenshotFileName);
-            //ss.ToString();//same as string screenshot = ss.AsBase64EncodedString;
+            File.Delete(screenshotFileName);
 
         }
 

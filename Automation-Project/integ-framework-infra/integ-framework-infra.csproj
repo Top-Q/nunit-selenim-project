@@ -136,6 +136,7 @@
     <Compile Include="Infra\Report\IReporter.cs" />
     <Compile Include="Infra\Report\Reporters\ExcelReport\ExcelReporter.cs" />
     <Compile Include="Infra\Report\Reporters\HtmlTestReporter\HtmlTestReporter.cs" />
+    <Compile Include="Infra\Report\Reporters\HtmlTestReporter\HtmlVideoTestReporter.cs" />
     <Compile Include="Infra\Report\Reporters\HtmlTestReporter\Model\Enum.cs" />
     <Compile Include="Infra\Report\Reporters\HtmlTestReporter\Model\Execution\Execution.cs" />
     <Compile Include="Infra\Report\Reporters\HtmlTestReporter\Model\Execution\Machine.cs" />
@@ -161,7 +162,12 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\video-recorder\video-recorder.csproj">
+      <Project>{7155bcbb-5fd3-43cd-bc7a-a57f83fa3566}</Project>
+      <Name>video-recorder</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

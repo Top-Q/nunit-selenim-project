@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -31,7 +32,7 @@ namespace video_recorder
         private const string TRIM_COMPRESSED_MOVIE = " -loglevel panic -ss {0} -i {1} -t {2} {3}";
         // private const string TRIM_COMPRESSED_MOVIE = " -loglevel panic -ss {0} -i {1} -t {2} -c:v copy -c:a copy {3}";
 
-        
+
         /// <summary>
         /// 0 - Source file
         /// 1 - Start time in seconds (e.g 30)
@@ -46,11 +47,21 @@ namespace video_recorder
 
         internal FfmpegWrapper(string ffmpegBinPath = @"c:/Program Files (x86)/ffmpeg/bin/")
         {
+            KillFfmpegProcess();
             this.ffmpegPath = ffmpegBinPath;
             if (!File.Exists(ffmpegPath + @"ffmpeg.exe"))
             {
                 throw new FileNotFoundException(ffmpegPath + "ffmpeg.exe was not found. Please install it or specify the correct folder");
             }
+        }
+
+        private void KillFfmpegProcess()
+        {
+            foreach (var process in Process.GetProcessesByName("ffmpeg"))
+            {
+                process.Kill();
+            }
+
         }
 
         /// <summary>
@@ -66,6 +77,7 @@ namespace video_recorder
             {
                 throw new ArgumentNullException("Arguments can't be null");
             }
+            KillFfmpegProcess();
             File.Delete(fileName);
             ffmpegProcess = new ProcessHandler(ffmpegPath + @"ffmpeg.exe", String.Format(CAPTURE_VIDEO_WITH_COMPRESSION, frameRate, fileName));
             ffmpegProcess.StartInNonBlockingMode();
@@ -80,6 +92,7 @@ namespace video_recorder
         /// <param name="fileName">Should end with .mkv</param>
         internal void CaptureRawVideo(string fileName, float frameRate = 24)
         {
+            KillFfmpegProcess();
             if (null == fileName)
             {
                 throw new ArgumentNullException("Arguments can't be null");
@@ -97,20 +110,21 @@ namespace video_recorder
             {
                 throw new InvalidOperationException("There is no video to end");
             }
-            
+
             ffmpegProcess.SendToProcess("q");
-            
+
             ProcessHandler.ProcessOutput output = ffmpegProcess.WaitForProcessToEnd();
             if (output.Stderror.Contains("Could not find video device with name"))
             {
                 throw new InvalidProgramException("'on screen capture recorder to video free' is not installed on current machine. Please install from: http://sourceforge.net/projects/screencapturer/files/ ");
-            }            
-            
+            }
+
         }
 
         internal void CompressVideo(string sourceFileName, string destinationFileName)
         {
-            if (!File.Exists(sourceFileName)) 
+            KillFfmpegProcess();
+            if (!File.Exists(sourceFileName))
             {
                 throw new FileNotFoundException("File " + sourceFileName + " is not exist");
             }
@@ -123,7 +137,7 @@ namespace video_recorder
             {
                 throw new InvalidProgramException("Failed to delete destination file.");
             }
-            ProcessHandler compressProcess = new ProcessHandler(ffmpegPath + @"ffmpeg.exe",String.Format(COMPRESS_VIDEO,sourceFileName, destinationFileName));
+            ProcessHandler compressProcess = new ProcessHandler(ffmpegPath + @"ffmpeg.exe", String.Format(COMPRESS_VIDEO, sourceFileName, destinationFileName));
             ProcessHandler.ProcessOutput processOutput = compressProcess.StartInBlockingMode();
 
             if (processOutput.ErrorCode != 0)
@@ -135,6 +149,7 @@ namespace video_recorder
 
         internal VideoDetails FetchVideoDetails(string fileName)
         {
+            KillFfmpegProcess();
             if (!File.Exists(fileName))
             {
                 throw new FileNotFoundException("File " + fileName + " is not exist");
@@ -151,12 +166,13 @@ namespace video_recorder
             {
                 throw new InvalidProgramException("Failed to fetch duration");
             }
-            return new VideoDetails(TimeSpan.Parse(matches[0].Groups[1].Value));            
+            return new VideoDetails(TimeSpan.Parse(matches[0].Groups[1].Value));
         }
 
 
         internal void TrimMovie(string sourceFileName, string destinationFileName, int timeToKeepInSeconds)
         {
+            KillFfmpegProcess();
             TimeSpan movieLength = FetchVideoDetails(sourceFileName).Duration;
             File.Delete(destinationFileName);
             ProcessHandler trimProcess = new ProcessHandler(ffmpegPath + @"ffmpeg.exe", String.Format(TRIM_COMPRESSED_MOVIE, movieLength - TimeSpan.FromSeconds(timeToKeepInSeconds), sourceFileName, TimeSpan.FromSeconds(timeToKeepInSeconds), destinationFileName));
@@ -181,7 +197,7 @@ namespace video_recorder
             internal TimeSpan Duration
             {
                 get { return duration; }
-                
+
             }
 
             public override string ToString()
@@ -189,16 +205,7 @@ namespace video_recorder
                 return "Duration: " + duration;
             }
 
-
-
-
         }
-
-
-
-
-
-
 
     }
 }

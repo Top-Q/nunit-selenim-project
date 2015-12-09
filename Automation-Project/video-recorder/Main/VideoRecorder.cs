@@ -12,8 +12,8 @@ namespace Topq.Auto.VideoRecorder
     {
 
         private FfmpegWrapper ffmpeg;
-        
-        private int secondsToSave = 10;
+
+        private int secondsToSave = 20;
 
         private float framePerSecond = 7.5f;
 
@@ -21,24 +21,21 @@ namespace Topq.Auto.VideoRecorder
 
         private string videoCaptureFileName;
 
-        private string fileUid;
-
 
         public VideoRecorder(string ffmpegBinPath = @"c:/Program Files (x86)/ffmpeg/bin/")
         {
-            ffmpeg = new FfmpegWrapper(ffmpegBinPath);            
-            fileUid = DateTime.Now.Ticks.ToString();
+            ffmpeg = new FfmpegWrapper(ffmpegBinPath);
             SetVideoCaptureFileName();
         }
 
         private void SetVideoCaptureFileName()
         {
-            string fileNamePrefix = Path.GetTempPath() + "tempVideoCaptureFile" + fileUid +".";
+            string fileNamePrefix = Path.GetTempPath() + "tempVideoCaptureFile.";
             if (reserveCpuMode)
             {
                 videoCaptureFileName = fileNamePrefix + "mkv";
-            } 
-            else 
+            }
+            else
             {
                 videoCaptureFileName = fileNamePrefix + "mp4";
             }
@@ -48,7 +45,15 @@ namespace Topq.Auto.VideoRecorder
 
         public void StartRecording()
         {
-            ffmpeg.CaptureRawVideo(videoCaptureFileName, FramePerSecond);
+            if (reserveCpuMode)
+            {
+                ffmpeg.CaptureRawVideo(videoCaptureFileName, FramePerSecond);
+            }
+            else
+            {
+                ffmpeg.CaptureCompressedVideo(videoCaptureFileName, FramePerSecond);
+            }
+
         }
 
         private void StopRecording()
@@ -65,7 +70,7 @@ namespace Topq.Auto.VideoRecorder
         public string SaveRecording()
         {
             StopRecording();
-            string tempVideoFileName = Path.GetTempPath() + "trimmedVideoCapture" + fileUid + (ReserveCpuMode ? ".mp4" : ".mkv");            
+            string tempVideoFileName = Path.GetTempPath() + "trimmedVideoCapture" + (ReserveCpuMode ? ".mkv" : ".mp4");
             ffmpeg.TrimMovie(videoCaptureFileName, tempVideoFileName, SecondsToSave);
             File.Delete(videoCaptureFileName);
             return tempVideoFileName;

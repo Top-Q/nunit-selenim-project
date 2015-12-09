@@ -1,5 +1,6 @@
 ﻿using integ_framework_infra.Infra.Report.Reporters;
 using integ_framework_infra.Infra.Report.Reporters.ExcelReport;
+using integ_framework_infra.Infra.Report.Reporters.HtmlTestReporter;
 using integ_framework_infra.Infra.Report.Reporters.HtmlTestReproters;
 using System;
 using System.Collections.Generic;
@@ -19,7 +20,7 @@ namespace integ_framework_infra.Infra.Report
 
         private ReportManager() {
             reporters = new List<IReporter>();
-            reporters.Add(new HtmlTestReporter());//TODO - Udi: research this issue "HtmlReporter"
+            reporters.Add(new HtmlVideoTestReporter());//TODO - Udi: research this issue "HtmlReporter"
             reporters.Add(new ExcelReporter());
             outputFolder = Directory.GetParent(System.IO.Directory.GetCurrentDirectory()).Parent.Parent.FullName + @"/TestResults/Report";
             try
